@@ -1,6 +1,8 @@
 from flask import Flask, g, jsonify
-import os
+from flask_cors import CORS
 import models
+from resources.projects import project
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -9,7 +11,7 @@ PORT = os.environ.get('PORT')
 
 # Initialize instance of the Flask class 
 app = Flask(__name__)
-# ======================================================
+# ================================================================
 # connect to the database before each request
 @app.before_request
 def before_request():
@@ -20,7 +22,12 @@ def before_request():
 def after_request(response):
     g.db.close()
     return response 
-# ======================================================
+# ================================================================
+# CORS - allow frontend to 'talk' to backend
+CORS(project, origins=['http://localhost:3000'], supports_credentials=True)
+# set up directions to handle api routes
+app.register_blueprint(project, url_prefix='/api/v1/projects')
+# ================================================================
 
 @app.route('/')
 def index(): 
