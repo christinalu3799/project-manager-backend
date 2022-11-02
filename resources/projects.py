@@ -24,6 +24,16 @@ def get_all_projects():
             'message': 'Sorry! Could not find projects.'
         })
 # ================================================================
+@project.route('/<id>', methods=['GET'])
+def get_one_project(id):
+    print('id of project to retrieve: ',id)
+    project = models.Project.get_by_id(id)
+    return jsonify(
+        data=model_to_dict(project),
+        status=200,
+        message=f"Successfully retrieved project with id of {id}"
+    ), 200
+# ================================================================
 @project.route('/', methods=['POST'])
 def create_project():
     payload = request.get_json()
