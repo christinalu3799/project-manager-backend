@@ -1,6 +1,6 @@
 from flask import Flask, g, jsonify
 from flask_cors import CORS
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 import models
 # ================================================================

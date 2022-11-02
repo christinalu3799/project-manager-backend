@@ -13,7 +13,7 @@ class User(UserMixin, Model):
         database = DATABASE
 # ================================================================
 class Project(Model):
-    # user_id = ForeignKeyField(User, backred='projects')
+    project_owner = ForeignKeyField(User, backref='projects')
     project_name = CharField()
     project_deadline = DateField() # 2022-11-2
     project_description = TextField()

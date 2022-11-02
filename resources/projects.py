@@ -1,7 +1,7 @@
 import models
  
 from flask import Blueprint, jsonify, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from playhouse.shortcuts import model_to_dict
 
 # arg1 = blueprints name
@@ -38,7 +38,7 @@ def get_one_project(id):
 @login_required
 def create_project():
     payload = request.get_json()
-    project = models.Project.create(**payload)
+    project = models.Project.create(**payload, project_owner=current_user.id)
     print('model to dict', model_to_dict(project)) # change model to dict
     project_dict = model_to_dict(project)
     return jsonify(data = project_dict, status = {
