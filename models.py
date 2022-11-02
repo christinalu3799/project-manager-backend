@@ -17,7 +17,7 @@ project_logs
 class Project(Model):
     # user_id = ForeignKeyField(User, backred='projects')
     project_name = CharField()
-    project_deadline = DateField()
+    project_deadline = DateField() # 2022-11-2
     project_description = TextField()
     # project_tasks = ForeignKeyField(Task, backurl='tasks')
     project_status = CharField() # 'not started'/'in progress'/'completed'
