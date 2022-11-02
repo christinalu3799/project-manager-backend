@@ -44,3 +44,24 @@ def create_project():
         'code': 201,
         'message': 'Successfully created a new project.'
     })
+# ================================================================
+@project.route('/<id>', methods=['PUT'])
+def update_project(id):
+    payload = request.get_json()
+    query = models.Project.update(**payload).where(models.Project.id == id)
+    query.execute()
+    return jsonify(
+        data=model_to_dict(models.Project.get_by_id(id)),
+        status=200,
+        message=f"Successfully updated project with id: {id}."
+    ),200
+# ================================================================
+@project.route('/<id>', methods=['DELETE'])
+def delete_dog(id):
+    query = models.Project.delete().where(models.Project.id == id)
+    query.execute()
+    return jsonify(
+        data = f"Successfully deleted project with id: {id}.",
+        message = f"Successfully deleted project with id: {id}.",
+        status = 200
+    ), 200
