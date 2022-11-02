@@ -1,7 +1,11 @@
 from flask import Flask, g, jsonify
 from flask_cors import CORS
 import models
+# ================================================================
+# importing from resources
 from resources.projects import project
+from resources.tasks import task
+# ================================================================
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -27,6 +31,7 @@ def after_request(response):
 CORS(project, origins=['http://localhost:3000'], supports_credentials=True)
 # set up directions to handle api routes
 app.register_blueprint(project, url_prefix='/api/v1/projects')
+app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
 # ================================================================
 
 @app.route('/')

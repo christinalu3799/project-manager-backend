@@ -3,6 +3,7 @@ import datetime
 
 DATABASE = SqliteDatabase('projects.sqlite')
 
+# ================================================================
 '''
 user_id (FOREIGN KEY)
 project_name
@@ -26,10 +27,18 @@ class Project(Model):
 
     class Meta:
         database = DATABASE
+# ================================================================
+class Task(Model):
+    project_id = ForeignKeyField(Project, backref='tasks')
+    task = CharField()
+    created_date = DateTimeField(default=datetime.datetime.now)
+    class Meta:
+        database = DATABASE
 
+# ================================================================
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Project], safe=True)
+    DATABASE.create_tables([Project, Task], safe=True)
     print("Connected to the DB and created tables if they don't already exist")
     DATABASE.close()
     

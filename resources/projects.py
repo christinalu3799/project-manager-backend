@@ -34,26 +34,26 @@ def get_one_project(id):
         message=f"Successfully retrieved project with id of {id}"
     ), 200
 # ================================================================
-@project.route('/', methods=['POST'])
+@project.route('/', methods = ['POST'])
 def create_project():
     payload = request.get_json()
     project = models.Project.create(**payload)
     print('model to dict', model_to_dict(project)) # change model to dict
     project_dict = model_to_dict(project)
-    return jsonify(data=project_dict, status={
+    return jsonify(data = project_dict, status = {
         'code': 201,
         'message': 'Successfully created a new project.'
     })
 # ================================================================
-@project.route('/<id>', methods=['PUT'])
+@project.route('/<id>', methods = ['PUT'])
 def update_project(id):
     payload = request.get_json()
     query = models.Project.update(**payload).where(models.Project.id == id)
     query.execute()
     return jsonify(
-        data=model_to_dict(models.Project.get_by_id(id)),
-        status=200,
-        message=f"Successfully updated project with id: {id}."
+        data = model_to_dict(models.Project.get_by_id(id)),
+        status = 200,
+        message = f"Successfully updated project with id: {id}."
     ),200
 # ================================================================
 @project.route('/<id>', methods=['DELETE'])
