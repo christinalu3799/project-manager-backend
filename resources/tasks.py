@@ -1,7 +1,7 @@
 import models
  
 from flask import Blueprint, jsonify, request
-
+from flask_login import login_required
 from playhouse.shortcuts import model_to_dict
 
 # arg1 = blueprints name
@@ -24,6 +24,7 @@ def get_all_tasks():
         })
 # ================================================================
 @task.route('/<id>', methods = ['PUT'])
+@login_required
 def update_task(id):
     payload = request.get_json()
     query = models.Task.update(**payload).where(models.Task.id == id)
@@ -35,6 +36,7 @@ def update_task(id):
     ),200
 # ================================================================
 @task.route('/', methods=['POST'])
+@login_required
 def create_task():
     payload = request.get_json()
     task = models.Task.create(**payload)
@@ -46,6 +48,7 @@ def create_task():
     })
 # ================================================================
 @task.route('/<id>', methods=['DELETE'])
+@login_required
 def delete_task(id):
     query = models.Task.delete().where(models.Task.id == id)
     query.execute()

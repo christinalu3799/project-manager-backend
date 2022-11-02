@@ -1,7 +1,7 @@
 import models
  
 from flask import Blueprint, jsonify, request
-
+from flask_login import login_required
 from playhouse.shortcuts import model_to_dict
 
 # arg1 = blueprints name
@@ -35,6 +35,7 @@ def get_one_project(id):
     ), 200
 # ================================================================
 @project.route('/', methods = ['POST'])
+@login_required
 def create_project():
     payload = request.get_json()
     project = models.Project.create(**payload)
@@ -46,6 +47,7 @@ def create_project():
     })
 # ================================================================
 @project.route('/<id>', methods = ['PUT'])
+@login_required
 def update_project(id):
     payload = request.get_json()
     query = models.Project.update(**payload).where(models.Project.id == id)
@@ -57,6 +59,7 @@ def update_project(id):
     ),200
 # ================================================================
 @project.route('/<id>', methods=['DELETE'])
+@login_required
 def delete_project(id):
     query = models.Project.delete().where(models.Project.id == id)
     query.execute()
