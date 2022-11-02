@@ -57,7 +57,7 @@ def update_project(id):
     ),200
 # ================================================================
 @project.route('/<id>', methods=['DELETE'])
-def delete_dog(id):
+def delete_project(id):
     query = models.Project.delete().where(models.Project.id == id)
     query.execute()
     return jsonify(
