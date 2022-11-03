@@ -18,6 +18,7 @@ class Project(Model):
     project_deadline = DateField() # 2022-11-2
     project_description = TextField()
     project_status = CharField() # 'not started'/'in progress'/'completed'
+    # project_tasks = ForeignKeyField(Task, backref='projects')
     # project_logs = ForeignKeyField(Log, backref='logs')
     created_date = DateTimeField(default=datetime.datetime.now)
 

@@ -2,7 +2,7 @@ import models
 
 from flask import request, jsonify, Blueprint
 from flask_bcrypt import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from playhouse.shortcuts import model_to_dict
 
 # ================================================================
@@ -29,7 +29,7 @@ def register():
         print(user_dict)
 
         del user_dict['password']
-        return jsonify(data = user, status = {
+        return jsonify(data = user_dict, status = {
             "code": 201,
             "message": "Successfully registered new user."
         })
@@ -68,3 +68,10 @@ def logout():
         status=200,
         message='User successfully logged out.'
     ), 200
+# ================================================================
+@user.route('/logged_in_user', methods = ['GET'])
+def get_logged_in_user(): 
+    print(f"{current_user.username} is current_user.username in GET logged_in_user")
+    user_dict = model_to_dict(current_user)
+    user_dict.pop('password')
+    return jsonify(data=user_dict), 200

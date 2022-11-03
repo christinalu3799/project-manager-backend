@@ -9,6 +9,7 @@ from playhouse.shortcuts import model_to_dict
 task = Blueprint('tasks','task')
 # ================================================================
 @task.route('/', methods=['GET'])
+@login_required
 def get_all_tasks():
     try:
         tasks = [model_to_dict(task) for task in models.Task.select()]
@@ -35,11 +36,14 @@ def update_task(id):
         message = f"Successfully updated task with id: {id}."
     ),200
 # ================================================================
-@task.route('/', methods=['POST'])
+@task.route('/<project_id>', methods=['POST'])
 @login_required
-def create_task():
+def create_task(project_id):
     payload = request.get_json()
-    task = models.Task.create(**payload)
+    task = models.Task.create(
+        project_id = project_id,
+        task = payload['task']
+    )
     print('model to dict', model_to_dict(task)) # change model to dict
     task_dict = model_to_dict(task)
     return jsonify(data=task_dict, status={

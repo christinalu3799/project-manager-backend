@@ -9,10 +9,11 @@ from playhouse.shortcuts import model_to_dict
 project = Blueprint('projects','project')
 # ================================================================
 @project.route('/', methods=['GET'])
+@login_required
 def get_all_projects():
     # find all projects and change each project from a dictionary to a new array
     try:
-        projects = [model_to_dict(project) for project in models.Project.select()]
+        projects = [model_to_dict(project) for project in current_user.projects]
         print(projects)
         return jsonify(data=projects, status={
             'code': 200,
@@ -25,6 +26,7 @@ def get_all_projects():
         })
 # ================================================================
 @project.route('/<id>', methods=['GET'])
+@login_required
 def get_one_project(id):
     print('id of project to retrieve: ',id)
     project = models.Project.get_by_id(id)
@@ -38,7 +40,14 @@ def get_one_project(id):
 @login_required
 def create_project():
     payload = request.get_json()
-    project = models.Project.create(**payload, project_owner=current_user.id)
+    project = models.Project.create(
+        project_owner = current_user.id,
+        project_name = payload['project_name'],
+        project_deadline = payload['project_deadline'],
+        project_description = payload['project_description'],
+        project_status = payload['project_status'],
+        # project_tasks = payload['project_tasks']
+    )
     print('model to dict', model_to_dict(project)) # change model to dict
     project_dict = model_to_dict(project)
     return jsonify(data = project_dict, status = {

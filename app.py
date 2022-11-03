@@ -1,13 +1,13 @@
 from flask import Flask, g, jsonify
 from flask_cors import CORS
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 
 import models
 # ================================================================
 # importing from resources
 from resources.projects import project
 from resources.tasks import task
-from resources.users import user
+from resources.user import user
 # ================================================================
 import os
 from dotenv import load_dotenv
