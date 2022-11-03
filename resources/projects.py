@@ -45,8 +45,7 @@ def create_project():
         project_name = payload['project_name'],
         project_deadline = payload['project_deadline'],
         project_description = payload['project_description'],
-        project_status = payload['project_status'],
-        # project_tasks = payload['project_tasks']
+        project_status = payload['project_status']
     )
     print('model to dict', model_to_dict(project)) # change model to dict
     project_dict = model_to_dict(project)

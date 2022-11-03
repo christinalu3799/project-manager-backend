@@ -8,11 +8,11 @@ from playhouse.shortcuts import model_to_dict
 # arg2 = import name
 task = Blueprint('tasks','task')
 # ================================================================
-@task.route('/', methods=['GET'])
+@task.route('/<project_id>', methods=['GET'])
 @login_required
-def get_all_tasks():
+def get_all_tasks(project_id):
     try:
-        tasks = [model_to_dict(task) for task in models.Task.select()]
+        tasks = [model_to_dict(task) for task in models.Task.select().where(models.Task.project_id == project_id)]
         print(tasks)
         return jsonify(data=tasks, status={
             'code': 200,
@@ -24,16 +24,16 @@ def get_all_tasks():
             'message': 'Sorry! Could not find tasks.'
         })
 # ================================================================
-@task.route('/<id>', methods = ['PUT'])
+@task.route('/<project_id>/<task_id>', methods = ['PUT'])
 @login_required
-def update_task(id):
+def update_task(project_id, task_id):
     payload = request.get_json()
-    query = models.Task.update(**payload).where(models.Task.id == id)
+    query = models.Task.update(**payload).where(models.Task.id == task_id, models.Task.project_id == project_id)
     query.execute()
     return jsonify(
-        data = model_to_dict(models.Task.get_by_id(id)),
+        data = model_to_dict(models.Task.get_by_id(task_id)),
         status = 200,
-        message = f"Successfully updated task with id: {id}."
+        message = f"Successfully updated task with id: {task_id}."
     ),200
 # ================================================================
 @task.route('/<project_id>', methods=['POST'])
@@ -51,13 +51,13 @@ def create_task(project_id):
         'message': 'Successfully created a new task.'
     })
 # ================================================================
-@task.route('/<id>', methods=['DELETE'])
+@task.route('/<project_id>/<task_id>', methods=['DELETE'])
 @login_required
-def delete_task(id):
-    query = models.Task.delete().where(models.Task.id == id)
+def delete_task(task_id):
+    query = models.Task.delete().where(models.Task.id == task_id)
     query.execute()
     return jsonify(
-        data = f"Successfully deleted task with id: {id}.",
-        message = f"Successfully deleted task with id: {id}.",
+        data = f"Successfully deleted task with id: {task_id}.",
+        message = f"Successfully deleted task with id: {task_id}.",
         status = 200
     ), 200

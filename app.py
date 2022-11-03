@@ -8,6 +8,7 @@ import models
 from resources.projects import project
 from resources.tasks import task
 from resources.user import user
+from resources.logs import log
 # ================================================================
 import os
 from dotenv import load_dotenv
@@ -43,13 +44,15 @@ def after_request(response):
     return response 
 # ================================================================
 # CORS - allow frontend to 'talk' to backend
+CORS(user, origins=['http://localhost:3000'], supports_credentials=True)
 CORS(project, origins=['http://localhost:3000'], supports_credentials=True)
 CORS(task, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(user, origins=['http://localhost:3000'], supports_credentials=True)
+CORS(log, origins=['http://localhost:3000'], supports_credentials=True)
 # set up directions to handle api routes
+app.register_blueprint(user, url_prefix='/api/v1/users')
 app.register_blueprint(project, url_prefix='/api/v1/projects')
 app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
-app.register_blueprint(user, url_prefix='/api/v1/users')
+app.register_blueprint(log, url_prefix='/api/v1/projects/logs')
 # ================================================================
 # Run the app
 if __name__=='__main__':
