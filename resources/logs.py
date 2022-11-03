@@ -24,23 +24,11 @@ def get_all_logs(project_id):
             'message': 'Sorry! Could not find logs.'
         })
 # ================================================================
-@log.route('/<project_id>/<log_id>', methods = ['PUT'])
-@login_required
-def update_log(log_id):
-    payload = request.get_json()
-    query = models.Log.update(**payload).where(models.Log.id == log_id)
-    query.execute()
-    return jsonify(
-        data = model_to_dict(models.Log.get_by_id(log_id)),
-        status = 200,
-        message = f"Successfully updated log with id: {log_id}."
-    ),200
-# ================================================================
 @log.route('/<project_id>', methods=['POST'])
 @login_required
 def create_log(project_id):
     payload = request.get_json()
-    log = models.log.create(
+    log = models.Log.create(
         project_id = project_id,
         log = payload['log']
     )
@@ -51,10 +39,22 @@ def create_log(project_id):
         'message': 'Successfully created a new log.'
     })
 # ================================================================
+@log.route('/<project_id>/<log_id>', methods = ['PUT'])
+@login_required
+def update_log(project_id, log_id):
+    payload = request.get_json()
+    query = models.Log.update(**payload).where(models.Log.id == log_id, models.Log.project_id == project_id)
+    query.execute()
+    return jsonify(
+        data = model_to_dict(models.Log.get_by_id(log_id)),
+        status = 200,
+        message = f"Successfully updated log with id: {log_id}."
+    ),200
+# ================================================================
 @log.route('/<project_id>/<log_id>', methods=['DELETE'])
 @login_required
-def delete_log(log_id):
-    query = models.Log.delete().where(models.Log.id == log_id)
+def delete_log(project_id, log_id):
+    query = models.Log.delete().where(models.Log.id == log_id, models.Log.project_id == project_id)
     query.execute()
     return jsonify(
         data = f"Successfully deleted log with id: {log_id}.",
