@@ -52,7 +52,7 @@ def login():
         else:
             return jsonify(data=user, status={
                 "code": 401,
-                "message": "Sorry, Username or Password is incorrect."
+                "message": "Sorry, Username or Password is incorrect. (Username)"
             })
     except models.DoesNotExist:
         return jsonify(data={}, status={
@@ -75,3 +75,9 @@ def get_logged_in_user():
     user_dict = model_to_dict(current_user)
     user_dict.pop('password')
     return jsonify(data=user_dict), 200
+# ================================================================
+@user.route('/get_all_users', methods = ['GET'])
+def get_all_users(): 
+    all_users = models.User.select()
+    all_users_dict = [model_to_dict(user) for user in all_users]
+    return jsonify(data=all_users_dict), 200

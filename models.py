@@ -1,7 +1,15 @@
 from peewee import *
 import datetime 
 from flask_login import UserMixin
-DATABASE = SqliteDatabase('projects.sqlite')
+
+import os
+from playhouse.db_url import connect # connect to db in heroku
+
+
+if 'ON_HEROKU' in os.environ: 
+    DATABASE = connect(os.environ.get('DATABASE_URL'))
+else: 
+    DATABASE = SqliteDatabase('projects.sqlite')
 
 # ================================================================
 class User(UserMixin, Model):
@@ -17,7 +25,7 @@ class Project(Model):
     project_name = CharField()
     project_deadline = DateField() # 2022-11-2
     project_description = TextField()
-    project_status = CharField() # 'not started'/'in progress'/'completed'
+    project_status = CharField() 
     created_date = DateTimeField(default=datetime.datetime.now)
 
     class Meta:

@@ -54,6 +54,11 @@ app.register_blueprint(project, url_prefix='/api/v1/projects')
 app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
 app.register_blueprint(log, url_prefix='/api/v1/projects/logs')
 # ================================================================
+# initialize models if in development
+if os.environ.get('FLASK_ENV') != 'development':
+  print('\non heroku!')
+  models.initialize()
+
 # Run the app
 if __name__=='__main__':
     models.initialize()
