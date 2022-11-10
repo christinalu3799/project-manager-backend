@@ -40,6 +40,7 @@ def get_one_project(id):
 @login_required
 def create_project():
     payload = request.get_json()
+    print(payload)
     project = models.Project.create(
         project_owner = current_user.id,
         project_name = payload['project_name'],
