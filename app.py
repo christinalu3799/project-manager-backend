@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DEBUG = True
-PORT = os.environ.get('PORT')
+PORT = os.environ.get('PORT') or 8000
 
 login_manager = LoginManager()
 
