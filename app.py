@@ -44,10 +44,11 @@ def after_request(response):
     return response 
 # ================================================================
 # CORS - allow frontend to 'talk' to backend
-CORS(user, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(project, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(task, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(log, origins=['http://localhost:3000'], supports_credentials=True)
+FRONTEND_URL = os.environ.get('FRONTEND_URL')
+CORS(user, origins=[FRONTEND_URL], supports_credentials=True)
+CORS(project, origins=[FRONTEND_URL], supports_credentials=True)
+CORS(task, origins=[FRONTEND_URL], supports_credentials=True)
+CORS(log, origins=[FRONTEND_URL], supports_credentials=True)
 # set up directions to handle api routes
 app.register_blueprint(user, url_prefix='/api/v1/users')
 app.register_blueprint(project, url_prefix='/api/v1/projects')
