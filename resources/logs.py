@@ -13,7 +13,6 @@ log = Blueprint('logs','log')
 def get_all_logs(project_id):
     try:
         logs = [model_to_dict(log) for log in models.Log.select().where(models.Log.project_id == project_id)]
-        print(logs)
         return jsonify(data=logs, status={
             'code': 200,
             'message': 'Successfully retrieved all logs!'
@@ -32,7 +31,6 @@ def create_log(project_id):
         project_id = project_id,
         log = payload['log']
     )
-    print('model to dict', model_to_dict(log)) # change model to dict
     log_dict = model_to_dict(log)
     return jsonify(data=log_dict, status={
         'code': 201,

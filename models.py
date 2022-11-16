@@ -34,6 +34,7 @@ class Project(Model):
 class Task(Model):
     project_id = ForeignKeyField(Project, backref='tasks')
     task = CharField()
+    is_complete = BooleanField(default=False)
     created_date = DateTimeField(default=datetime.datetime.now)
 
     class Meta:

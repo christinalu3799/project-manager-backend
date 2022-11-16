@@ -14,7 +14,6 @@ def get_all_projects():
     # find all projects and change each project from a dictionary to a new array
     try:
         projects = [model_to_dict(project) for project in current_user.projects]
-        print(projects)
         return jsonify(data=projects, status={
             'code': 200,
             'message': 'Successfully retrieved all projects!'
@@ -28,7 +27,6 @@ def get_all_projects():
 @project.route('/<id>', methods=['GET'])
 @login_required
 def get_one_project(id):
-    print('id of project to retrieve: ',id)
     project = models.Project.get_by_id(id)
     return jsonify(
         data=model_to_dict(project),
@@ -40,7 +38,6 @@ def get_one_project(id):
 @login_required
 def create_project():
     payload = request.get_json()
-    print(payload)
     project = models.Project.create(
         project_owner = current_user.id,
         project_name = payload['project_name'],
@@ -48,7 +45,6 @@ def create_project():
         project_description = payload['project_description'],
         project_status = payload['project_status']
     )
-    print('model to dict', model_to_dict(project)) # change model to dict
     project_dict = model_to_dict(project)
     return jsonify(data = project_dict, status = {
         'code': 201,

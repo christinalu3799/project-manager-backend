@@ -1,7 +1,7 @@
 from flask import Flask, g, jsonify
 from flask_cors import CORS
 from flask_login import LoginManager
-
+from flask import request
 import models
 # ================================================================
 # importing from resources
@@ -13,17 +13,33 @@ from resources.logs import log
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
-
-login_manager = LoginManager()
+FRONTEND_URL = os.environ.get('FRONTEND_URL')
+# ================================================================
 
 # Initialize instance of the Flask class 
 app = Flask(__name__)
 # ================================================================
-app.secret_key = os.environ.get('APP_SECRET')
+# HANDLE CORS ORIGINS 
+@app.after_request 
+def cors_origin(response):
+    allowed_origins = ['http://localhost:3000', FRONTEND_URL]
+    if allowed_origins == "*":
+        response.headers['Access-Control-Allow-Origin'] = "*"
+    else:
+        assert request.headers['Host']
+        if request.headers.get("Origin"):
+            response.headers["Access-Control-Allow-Origin"]  = request.headers["Origin"]
+        else:
+            for origin in allowed_origins:
+                if origin.find(request.headers["Host"]) != -1:
+                    response.headers["Access-Control-Allow-Origin"] = origin
+    return response
+# ================================================================
+login_manager = LoginManager()
 login_manager.init_app(app) # set up session on the app
+app.secret_key = os.environ.get('APP_SECRET')
 
 @login_manager.user_loader
 def load_user(userid):
@@ -44,7 +60,6 @@ def after_request(response):
     return response 
 # ================================================================
 # CORS - allow frontend to 'talk' to backend
-FRONTEND_URL = os.environ.get('FRONTEND_URL')
 CORS(user, origins=['http://localhost:3000',FRONTEND_URL], supports_credentials=True)
 CORS(project, origins=['http://localhost:3000',FRONTEND_URL], supports_credentials=True)
 CORS(task, origins=['http://localhost:3000',FRONTEND_URL], supports_credentials=True)
