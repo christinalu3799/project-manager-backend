@@ -15,11 +15,13 @@ def get_all_projects():
     # find all projects and change each project from a dictionary to a new array
     try:
         projects = [model_to_dict(project) for project in current_user.projects]
+        print('trying to get projects!')
         return jsonify(data=projects, status={
             'code': 200,
             'message': 'Successfully retrieved all projects!'
         })
     except models.DoesNotExist:
+        print('sorry, cannot find projects!')
         return jsonify(data={}, status={
             'code': 401,
             'message': 'Sorry! Could not find projects.'

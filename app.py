@@ -2,6 +2,8 @@ from flask import Flask, g, jsonify
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask import request
+from flask import session 
+# session.permanent = True
 import models
 # ================================================================
 # importing from resources
@@ -22,20 +24,20 @@ FRONTEND_URL = os.environ.get('FRONTEND_URL')
 app = Flask(__name__)
 # ================================================================
 # HANDLE CORS ORIGINS 
-@app.after_request 
-def cors_origin(response):
-    allowed_origins = ['http://localhost:3000', FRONTEND_URL]
-    if allowed_origins == "*":
-        response.headers['Access-Control-Allow-Origin'] = "*"
-    else:
-        assert request.headers['Host']
-        if request.headers.get("Origin"):
-            response.headers["Access-Control-Allow-Origin"]  = request.headers["Origin"]
-        else:
-            for origin in allowed_origins:
-                if origin.find(request.headers["Host"]) != -1:
-                    response.headers["Access-Control-Allow-Origin"] = origin
-    return response
+# @app.after_request 
+# def cors_origin(response):
+#     allowed_origins = ['http://localhost:3000', FRONTEND_URL]
+#     if allowed_origins == "*":
+#         response.headers['Access-Control-Allow-Origin'] = "*"
+#     else:
+#         assert request.headers['Host']
+#         if request.headers.get("Origin"):
+#             response.headers["Access-Control-Allow-Origin"]  = request.headers["Origin"]
+#         else:
+#             for origin in allowed_origins:
+#                 if origin.find(request.headers["Host"]) != -1:
+#                     response.headers["Access-Control-Allow-Origin"] = origin
+#     return response
 # ================================================================
 login_manager = LoginManager()
 login_manager.init_app(app) # set up session on the app
@@ -60,14 +62,14 @@ def after_request(response):
     return response 
 # ================================================================
 # CORS - allow frontend to 'talk' to backend
-CORS(user, origins=["*"], supports_credentials=True)
-CORS(project, origins=["*"], supports_credentials=True)
-CORS(task, origins=["*"], supports_credentials=True)
-CORS(log, origins=["*"], supports_credentials=True)
-# CORS(user, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
-# CORS(project, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
-# CORS(task, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
-# CORS(log, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
+# CORS(user, origins=["*"], supports_credentials=True)
+# CORS(project, origins=["*"], supports_credentials=True)
+# CORS(task, origins=["*"], supports_credentials=True)
+# CORS(log, origins=["*"], supports_credentials=True)
+CORS(user, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
+CORS(project, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
+CORS(task, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
+CORS(log, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 # set up directions to handle api routes
 app.register_blueprint(user, url_prefix='/api/v1/users')
 app.register_blueprint(project, url_prefix='/api/v1/projects')

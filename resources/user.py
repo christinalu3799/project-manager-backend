@@ -1,6 +1,6 @@
 import models
 
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint, session
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user
 from playhouse.shortcuts import model_to_dict
@@ -27,12 +27,17 @@ def register():
 
         user_dict = model_to_dict(user)
         print(user_dict)
+        session['user'] = user_dict
+        print('---THIS IS THE USER SESSION (REGISTER): ', session['user'])
 
         del user_dict['password']
-        return jsonify(data = user_dict, status = {
-            "code": 201,
-            "message": "Successfully registered new user."
-        })
+
+        if 'user' in session:
+            user = session['user']
+            return jsonify(data = user, status = {
+                "code": 201,
+                "message": "Successfully registered new user."
+            })
 # ================================================================
 @user.route('/login', methods=['POST'])
 def login(): 
@@ -41,15 +46,22 @@ def login():
     try:
         user = models.User.get(models.User.email == payload['email'])
         user_dict = model_to_dict(user)
+        session['user'] = user_dict
+        print('---THIS IS THE USER SESSION: ', session['user'])
         if(check_password_hash(user_dict['password'], payload['password'])):
             del user_dict['password']
             login_user(user)
             print('The current user is: ', user)
+            print('The current user_dict is: ', user_dict)
             print('is current user authenticated?', current_user.is_authenticated)
-            return jsonify(data={}, status={
-                "code": 200, 
-                "message": "Successfully logged in."
-            })
+            # session['user'] = user
+            # print(session['user'])
+            if 'user' in session:
+                user = session['user']
+                return jsonify(data=user, status={
+                    "code": 200, 
+                    "message": "Successfully logged in."
+                })
         # else:
         #     return jsonify(data=user, status={
         #         "code": 401,
