@@ -1,8 +1,7 @@
-from flask import Flask, g, jsonify, make_response
+from flask import Flask, g
 from flask_cors import CORS
 from flask_login import LoginManager
-from flask import request
-from flask_session import Session
+
 import models
 # ================================================================
 # importing from resources
@@ -20,23 +19,16 @@ FRONTEND_URL = os.environ.get('FRONTEND_URL')
 # ================================================================
 # Initialize instance of the Flask class 
 app = Flask(__name__)
-
-@app.route('/')
-def cookies():
-    res = make_response('making a response!')
-    cookies = request.cookies
-    res.set_cookie('my_cookie', 'foo', samesite=None, path=request.path, secure=False, httponly=False)
-    print('---HERE IS MY RESPONSE: (user.py)',res)
-    return res
-
 # ================================================================
 login_manager = LoginManager()
 login_manager.init_app(app) # set up session on the app
+login_manager.login_view = 'login'
 app.secret_key = os.environ.get('APP_SECRET')
 
 @login_manager.user_loader
 def load_user(userid):
     try: 
+        print('------IM IN USER LOADER: ------', models.User.get(models.User.id == userid))
         return models.User.get(models.User.id == userid)
     except models.DoesNotExist:
         return None 

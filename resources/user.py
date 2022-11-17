@@ -42,36 +42,23 @@ def register():
             })
 # ================================================================
 @user.route('/login', methods=['POST'])
-# @cross_origin(methods=['POST'], supports_credentials=True, headers=['Content-Type', 'Authorization'])
 def login(): 
     
-
     payload = request.get_json()
     print('payload', payload)
     try:
         user = models.User.get(models.User.email == payload['email'])
         user_dict = model_to_dict(user)
-        session['user'] = user_dict
-        print('---THIS IS THE USER SESSION: ', session['user'])
         if(check_password_hash(user_dict['password'], payload['password'])):
             del user_dict['password']
             login_user(user)
             print('The current user is: ', user)
             print('The current user_dict is: ', user_dict)
             print('is current user authenticated?', current_user.is_authenticated)
-            # session['user'] = user
-            print(session['_id'])
-            if 'user' in session:
-                user = session['user']
-                return jsonify(data=user, status={
-                    "code": 200, 
-                    "message": "Successfully logged in."
-                })
-        # else:
-        #     return jsonify(data=user, status={
-        #         "code": 401,
-        #         "message": "Sorry, Username or Password is incorrect. (Username)"
-        #     })
+            return jsonify(data=user_dict, status={
+                "code": 200, 
+                "message": "Successfully logged in."
+            })
     except models.DoesNotExist:
         return jsonify(data={}, status={
             "code": 401,
