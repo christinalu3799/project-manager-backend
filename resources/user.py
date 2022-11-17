@@ -45,6 +45,7 @@ def login():
             del user_dict['password']
             login_user(user)
             print('The current user is: ', user)
+            print('is current user authenticated?', current_user.is_authenticated)
             return jsonify(data={}, status={
                 "code": 200, 
                 "message": "Successfully logged in."
@@ -59,7 +60,6 @@ def login():
             "code": 401,
             "message": "Sorry, Username or Password is incorrect."
         })
-    print('is current user authenticated?', current_user.is_authenticated)
 # ================================================================
 @user.route('/logout', methods=['GET'])
 def logout():
