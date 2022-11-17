@@ -9,7 +9,7 @@ from playhouse.shortcuts import model_to_dict
 log = Blueprint('logs','log')
 # ================================================================
 @log.route('/<project_id>', methods=['GET'])
-@login_required
+# @login_required
 def get_all_logs(project_id):
     try:
         logs = [model_to_dict(log) for log in models.Log.select().where(models.Log.project_id == project_id)]
@@ -24,7 +24,7 @@ def get_all_logs(project_id):
         })
 # ================================================================
 @log.route('/<project_id>', methods=['POST'])
-@login_required
+# @login_required
 def create_log(project_id):
     payload = request.get_json()
     log = models.Log.create(
@@ -38,7 +38,7 @@ def create_log(project_id):
     })
 # ================================================================
 @log.route('/<project_id>/<log_id>', methods = ['PUT'])
-@login_required
+# @login_required
 def update_log(project_id, log_id):
     payload = request.get_json()
     query = models.Log.update(**payload).where(models.Log.id == log_id, models.Log.project_id == project_id)
@@ -50,7 +50,7 @@ def update_log(project_id, log_id):
     ),200
 # ================================================================
 @log.route('/<project_id>/<log_id>', methods=['DELETE'])
-@login_required
+# @login_required
 def delete_log(project_id, log_id):
     query = models.Log.delete().where(models.Log.id == log_id, models.Log.project_id == project_id)
     query.execute()

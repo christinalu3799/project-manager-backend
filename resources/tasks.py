@@ -9,7 +9,7 @@ from playhouse.shortcuts import model_to_dict
 task = Blueprint('tasks','task')
 # ================================================================
 @task.route('/<project_id>', methods=['GET'])
-@login_required
+# @login_required
 def get_all_tasks(project_id):
     try:
         tasks = [model_to_dict(task) for task in models.Task.select().where(models.Task.project_id == project_id)]
@@ -25,7 +25,7 @@ def get_all_tasks(project_id):
         })
 # ================================================================
 @task.route('/<project_id>', methods=['POST'])
-@login_required
+# @login_required
 def create_task(project_id):
     payload = request.get_json()
     task = models.Task.create(
@@ -40,7 +40,7 @@ def create_task(project_id):
     })
 # ================================================================
 @task.route('/<project_id>/<task_id>', methods = ['PUT'])
-@login_required
+# @login_required
 def update_task(project_id, task_id):
     payload = request.get_json()
     query = models.Task.update(**payload).where(models.Task.id == task_id, models.Task.project_id == project_id)
@@ -52,7 +52,7 @@ def update_task(project_id, task_id):
     ),200
 # ================================================================
 @task.route('/<project_id>/<task_id>', methods=['DELETE'])
-@login_required
+# @login_required
 def delete_task(project_id, task_id):
     query = models.Task.delete().where(models.Task.id == task_id, models.Task.project_id == project_id)
     query.execute()
