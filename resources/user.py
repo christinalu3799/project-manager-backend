@@ -4,9 +4,11 @@ from flask import request, jsonify, Blueprint, session
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user
 from playhouse.shortcuts import model_to_dict
+from flask_cors import cross_origin
 
 # ================================================================
 user = Blueprint('users', 'user')
+
 # ================================================================
 @user.route('/register', methods=['POST'])
 def register():
@@ -40,7 +42,10 @@ def register():
             })
 # ================================================================
 @user.route('/login', methods=['POST'])
+# @cross_origin(methods=['POST'], supports_credentials=True, headers=['Content-Type', 'Authorization'])
 def login(): 
+    
+
     payload = request.get_json()
     print('payload', payload)
     try:
@@ -55,7 +60,7 @@ def login():
             print('The current user_dict is: ', user_dict)
             print('is current user authenticated?', current_user.is_authenticated)
             # session['user'] = user
-            # print(session['user'])
+            print(session['_id'])
             if 'user' in session:
                 user = session['user']
                 return jsonify(data=user, status={

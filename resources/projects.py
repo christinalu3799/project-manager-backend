@@ -1,9 +1,8 @@
 import models
  
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from flask_login import login_required, current_user
 from playhouse.shortcuts import model_to_dict
-
 # arg1 = blueprints name
 # arg2 = import name
 project = Blueprint('projects','project')
@@ -15,8 +14,10 @@ def get_all_projects():
     # find all projects and change each project from a dictionary to a new array
     try:
         projects = [model_to_dict(project) for project in current_user.projects]
+        session['projects'] = projects
+        # print(session['projects']) 
         print('trying to get projects!')
-        return jsonify(data=projects, status={
+        return jsonify(data=session['projects'], status={
             'code': 200,
             'message': 'Successfully retrieved all projects!'
         })

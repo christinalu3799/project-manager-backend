@@ -1,9 +1,8 @@
-from flask import Flask, g, jsonify
+from flask import Flask, g, jsonify, make_response
 from flask_cors import CORS
 from flask_login import LoginManager
 from flask import request
-from flask import session 
-# session.permanent = True
+from flask_session import Session
 import models
 # ================================================================
 # importing from resources
@@ -19,25 +18,17 @@ DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
 FRONTEND_URL = os.environ.get('FRONTEND_URL')
 # ================================================================
-
 # Initialize instance of the Flask class 
 app = Flask(__name__)
-# ================================================================
-# HANDLE CORS ORIGINS 
-# @app.after_request 
-# def cors_origin(response):
-#     allowed_origins = ['http://localhost:3000', FRONTEND_URL]
-#     if allowed_origins == "*":
-#         response.headers['Access-Control-Allow-Origin'] = "*"
-#     else:
-#         assert request.headers['Host']
-#         if request.headers.get("Origin"):
-#             response.headers["Access-Control-Allow-Origin"]  = request.headers["Origin"]
-#         else:
-#             for origin in allowed_origins:
-#                 if origin.find(request.headers["Host"]) != -1:
-#                     response.headers["Access-Control-Allow-Origin"] = origin
-#     return response
+
+@app.route('/')
+def cookies():
+    res = make_response('making a response!')
+    cookies = request.cookies
+    res.set_cookie('my_cookie', 'foo', samesite=None, path=request.path, secure=False, httponly=False)
+    print('---HERE IS MY RESPONSE: (user.py)',res)
+    return res
+
 # ================================================================
 login_manager = LoginManager()
 login_manager.init_app(app) # set up session on the app
