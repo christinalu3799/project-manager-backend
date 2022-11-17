@@ -11,6 +11,7 @@ project = Blueprint('projects','project')
 @project.route('/', methods=['GET'])
 @login_required
 def get_all_projects():
+    print('is current user authenticated?', current_user.is_authenticated)
     # find all projects and change each project from a dictionary to a new array
     try:
         projects = [model_to_dict(project) for project in current_user.projects]

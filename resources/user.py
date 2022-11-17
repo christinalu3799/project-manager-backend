@@ -38,7 +38,6 @@ def register():
 def login(): 
     payload = request.get_json()
     print('payload', payload)
-    print('is current user authenticated?', current_user.is_authenticated)
     try:
         user = models.User.get(models.User.email == payload['email'])
         user_dict = model_to_dict(user)
@@ -60,6 +59,7 @@ def login():
             "code": 401,
             "message": "Sorry, Username or Password is incorrect."
         })
+    print('is current user authenticated?', current_user.is_authenticated)
 # ================================================================
 @user.route('/logout', methods=['GET'])
 def logout():
