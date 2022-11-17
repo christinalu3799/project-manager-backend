@@ -49,11 +49,11 @@ def login():
                 "code": 200, 
                 "message": "Successfully logged in."
             })
-        else:
-            return jsonify(data=user, status={
-                "code": 401,
-                "message": "Sorry, Username or Password is incorrect. (Username)"
-            })
+        # else:
+        #     return jsonify(data=user, status={
+        #         "code": 401,
+        #         "message": "Sorry, Username or Password is incorrect. (Username)"
+        #     })
     except models.DoesNotExist:
         return jsonify(data={}, status={
             "code": 401,

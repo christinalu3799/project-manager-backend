@@ -60,6 +60,10 @@ def after_request(response):
     return response 
 # ================================================================
 # CORS - allow frontend to 'talk' to backend
+# CORS(user, origins=["*"], supports_credentials=True)
+# CORS(project, origins=["*"], supports_credentials=True)
+# CORS(task, origins=["*"], supports_credentials=True)
+# CORS(log, origins=["*"], supports_credentials=True)
 CORS(user, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 CORS(project, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 CORS(task, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
