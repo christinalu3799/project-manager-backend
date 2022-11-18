@@ -4,7 +4,7 @@ from flask import request, jsonify, Blueprint, session
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, current_user
 from playhouse.shortcuts import model_to_dict
-from flask_cors import cross_origin
+
 
 # ================================================================
 user = Blueprint('users', 'user')
