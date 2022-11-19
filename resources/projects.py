@@ -11,7 +11,7 @@ project = Blueprint('projects','project')
 # ================================================================
 @project.route('/', methods=['GET'])
 @login_required
-@cross_origin()
+# @cross_origin()
 def get_all_projects():
     print('is current user authenticated?', current_user.is_authenticated)
     # find all projects and change each project from a dictionary to a new array
@@ -33,7 +33,7 @@ def get_all_projects():
 # ================================================================
 @project.route('/<id>', methods=['GET'])
 @login_required
-@cross_origin()
+# @cross_origin()
 def get_one_project(id):
     project = models.Project.get_by_id(id)
     return jsonify(
@@ -44,7 +44,7 @@ def get_one_project(id):
 # ================================================================
 @project.route('/', methods = ['POST'])
 @login_required
-@cross_origin()
+# @cross_origin()
 def create_project():
     payload = request.get_json()
     project = models.Project.create(
@@ -62,7 +62,7 @@ def create_project():
 # ================================================================
 @project.route('/<id>', methods = ['PUT'])
 @login_required
-@cross_origin()
+# @cross_origin()
 def update_project(id):
     payload = request.get_json()
     query = models.Project.update(**payload).where(models.Project.id == id)
@@ -75,7 +75,7 @@ def update_project(id):
 # ================================================================
 @project.route('/<id>', methods=['DELETE'])
 @login_required
-@cross_origin()
+# @cross_origin()
 def delete_project(id):
     query = models.Project.delete().where(models.Project.id == id)
     query.execute()

@@ -22,8 +22,12 @@ app = Flask(__name__)
 # ================================================================
 login_manager = LoginManager()
 login_manager.init_app(app) # set up session on the app
-login_manager.login_view = 'login'
 app.secret_key = os.environ.get('APP_SECRET')
+
+app.register_blueprint(user, url_prefix='/api/v1/users')
+app.register_blueprint(project, url_prefix='/api/v1/projects')
+app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
+app.register_blueprint(log, url_prefix='/api/v1/projects/logs')
 
 @login_manager.user_loader
 def load_user(userid):
@@ -54,10 +58,7 @@ CORS(project, origins=['http://localhost:3000', FRONTEND_URL], supports_credenti
 CORS(task, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 CORS(log, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 # set up directions to handle api routes
-app.register_blueprint(user, url_prefix='/api/v1/users')
-app.register_blueprint(project, url_prefix='/api/v1/projects')
-app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
-app.register_blueprint(log, url_prefix='/api/v1/projects/logs')
+
 # ================================================================
 # initialize models if in development
 if os.environ.get('FLASK_ENV') != 'development':
