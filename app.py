@@ -24,11 +24,6 @@ login_manager = LoginManager()
 login_manager.init_app(app) # set up session on the app
 app.secret_key = os.environ.get('APP_SECRET')
 
-app.register_blueprint(user, url_prefix='/api/v1/users')
-app.register_blueprint(project, url_prefix='/api/v1/projects')
-app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
-app.register_blueprint(log, url_prefix='/api/v1/projects/logs')
-
 @login_manager.user_loader
 def load_user(userid):
     try: 
@@ -36,17 +31,6 @@ def load_user(userid):
         return models.User.get(models.User.id == userid)
     except models.DoesNotExist:
         return None 
-# ================================================================
-# connect to the database before each request
-@app.before_request
-def before_request():
-    g.db = models.DATABASE
-    g.db.connect()
-# close the database connection after each request
-@app.after_request
-def after_request(response):
-    g.db.close()
-    return response 
 # ================================================================
 # CORS - allow frontend to 'talk' to backend
 # CORS(user, origins=["*"], supports_credentials=True)
@@ -58,7 +42,21 @@ CORS(project, origins=['http://localhost:3000', FRONTEND_URL], supports_credenti
 CORS(task, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 CORS(log, origins=['http://localhost:3000', FRONTEND_URL], supports_credentials=True)
 # set up directions to handle api routes
-
+app.register_blueprint(user, url_prefix='/api/v1/users')
+app.register_blueprint(project, url_prefix='/api/v1/projects')
+app.register_blueprint(task, url_prefix='/api/v1/projects/tasks')
+app.register_blueprint(log, url_prefix='/api/v1/projects/logs')
+# ================================================================
+# connect to the database before each request
+@app.before_request
+def before_request():
+    g.db = models.DATABASE
+    g.db.connect()
+# close the database connection after each request
+@app.after_request
+def after_request(response):
+    g.db.close()
+    return response 
 # ================================================================
 # initialize models if in development
 if os.environ.get('FLASK_ENV') != 'development':
